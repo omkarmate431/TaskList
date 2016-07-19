@@ -3,6 +3,7 @@ package com.mate.tasklist;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -47,6 +48,29 @@ public class EditTask extends AppCompatActivity {
         spinnerDay.setAdapter(adapter1);
         spinnerPriority.setAdapter(adapter2);
 
+        TaskDbHelper taskDbHelper1 = new TaskDbHelper(EditTask.this);
+        SQLiteDatabase db = taskDbHelper1.getReadableDatabase();
+        Cursor taskCursor = db.rawQuery("SELECT * FROM AllTasks WHERE _id= '"+id+"'", null);
+        taskCursor.moveToFirst();
+
+        while (taskCursor.isAfterLast() == false) {
+            if (taskCursor.getInt(taskCursor.getColumnIndex("_id")) == id)      //Go to the selected task's row
+            {
+                break;
+            }
+            else {
+                taskCursor.moveToNext();
+            }
+        }
+
+        Task task = getTaskFromCursor(taskCursor);
+
+        title.setText(task.taskTitle());
+        shortDescription.setText(task.shortDescription());
+        longDescription.setText(task.longDescription());
+        spinnerDay.setSelection(adapter1.getPosition(task.day()));
+        spinnerPriority.setSelection(adapter2.getPosition(task.priority()));
+
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,19 +90,36 @@ public class EditTask extends AppCompatActivity {
                                 contentValues.put("title", title.getText().toString());
                                 contentValues.put("short_description", shortDescription.getText().toString());
                                 contentValues.put("long_description", longDescription.getText().toString());
-                                //contentValues.put("priority", priority);
+                                contentValues.put("priority", spinnerPriority.getSelectedItem().toString());
+                                contentValues.put("day", spinnerDay.getSelectedItem().toString());
                                 //contentValues.put("isCompleted", isCompleted);
-                                db.update("MondayTask",contentValues,"_id="+id,null);
+                                db.update("AllTasks",contentValues,"_id="+id,null);
+
+                                Toast.makeText(EditTask.this,"Changes Saved",Toast.LENGTH_LONG).show();
+
+                                Intent intent = new Intent(EditTask.this,MainActivity.class);       //Edit Successful. Go to mainpage
+                                startActivity(intent);
                             }
                         }).setNegativeButton("No",null).setCancelable(false);
                 AlertDialog alert = alertDialog.create();
                 alert.show();
 
 
-                Toast.makeText(EditTask.this,"Changes Saved",Toast.LENGTH_LONG).show();
+
             }
         });
 
 
+    }
+    private Task getTaskFromCursor(Cursor cursor) {
+        // Extract properties from cursor
+        String title = cursor.getString(cursor.getColumnIndexOrThrow("title"));
+        String short_description = cursor.getString(cursor.getColumnIndexOrThrow("short_description"));
+        String long_description = cursor.getString(cursor.getColumnIndexOrThrow("long_description"));
+        String priority = cursor.getString(cursor.getColumnIndexOrThrow("priority"));
+        String day = cursor.getString(cursor.getColumnIndexOrThrow("day"));
+        boolean isCompleted = cursor.getInt(cursor.getColumnIndexOrThrow("isCompleted"))>0; //From StackOverflow
+
+        return Task.create(title, short_description, long_description, priority,day, isCompleted);
     }
 }
