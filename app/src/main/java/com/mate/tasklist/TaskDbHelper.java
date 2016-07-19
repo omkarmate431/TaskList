@@ -19,7 +19,9 @@ public class TaskDbHelper extends SQLiteOpenHelper {
     private static String SHORT_DESCRIPTION = "short_description";
     private static String LONG_DESCRIPTION = "long_description";
     private static String PRIORITY = "priority";
+    private static String DAY = "day";
     private static String ISCOMPLETED = "isCompleted";
+
 
     private final Context myContext;
 
@@ -36,7 +38,6 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
         db.execSQL("create table if not exists MondayTask (_id integer primary key autoincrement, "+TITLE+" text, "+SHORT_DESCRIPTION+" text, "+LONG_DESCRIPTION+" text, "+PRIORITY+" text, "+ISCOMPLETED+" boolean)");
         db.execSQL("create table if not exists TuesdayTask (_id integer primary key autoincrement, "+TITLE+" text, "+SHORT_DESCRIPTION+" text, "+LONG_DESCRIPTION+" text, "+PRIORITY+" text, "+ISCOMPLETED+" boolean)");
         db.execSQL("create table if not exists WednesdayTask (_id integer primary key autoincrement, "+TITLE+" text, "+SHORT_DESCRIPTION+" text, "+LONG_DESCRIPTION+" text, "+PRIORITY+" text, "+ISCOMPLETED+" boolean)");
@@ -44,18 +45,22 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         db.execSQL("create table if not exists FridayTask (_id integer primary key autoincrement, "+TITLE+" text, "+SHORT_DESCRIPTION+" text, "+LONG_DESCRIPTION+" text, "+PRIORITY+" text, "+ISCOMPLETED+" boolean)");
         db.execSQL("create table if not exists SaturdayTask (_id integer primary key autoincrement, "+TITLE+" text, "+SHORT_DESCRIPTION+" text, "+LONG_DESCRIPTION+" text, "+PRIORITY+" text, "+ISCOMPLETED+" boolean)");
         db.execSQL("create table if not exists SundayTask (_id integer primary key autoincrement, "+TITLE+" text, "+SHORT_DESCRIPTION+" text, "+LONG_DESCRIPTION+" text, "+PRIORITY+" text, "+ISCOMPLETED+" boolean)");
+        db.execSQL("create table if not exists AllTasks (_id integer primary key autoincrement, "+TITLE+" text, "+SHORT_DESCRIPTION+" text, "+LONG_DESCRIPTION+" text, "+PRIORITY+" text, "+DAY+" text, "+ISCOMPLETED+" boolean)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("drop table if exists MondayTask");
-        db.execSQL("drop table if exists TuesdayTask");
-        db.execSQL("drop table if exists WednesdayTask");
-        db.execSQL("drop table if exists ThursdayTask");
-        db.execSQL("drop table if exists FridayTask");
-        db.execSQL("drop table if exists SaturdayTask");
-        db.execSQL("drop table if exists SundayTask");
-        onCreate(db);
+        {
+            db.execSQL("drop table if exists MondayTask");
+            db.execSQL("drop table if exists TuesdayTask");
+            db.execSQL("drop table if exists WednesdayTask");
+            db.execSQL("drop table if exists ThursdayTask");
+            db.execSQL("drop table if exists FridayTask");
+            db.execSQL("drop table if exists SaturdayTask");
+            db.execSQL("drop table if exists SundayTask");
+            db.execSQL("drop table if exists AllTasks");
+            onCreate(db);
+        }
     }
 
     public boolean addTaskMonday(String title, String short_description, String long_description, String priority, Boolean isCompleted)
@@ -155,6 +160,21 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean addTask(String title, String short_description, String long_description, String priority, String day,Boolean isCompleted)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("title", title);
+        contentValues.put("short_description", short_description);
+        contentValues.put("long_description", long_description);
+        contentValues.put("priority", priority);
+        contentValues.put("day",day);
+        contentValues.put("isCompleted", isCompleted);
+        db.insert("AllTasks", null, contentValues);
+        return true;
+    }
+
     public String[] retrieveTaskMonday(int pos)
     {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -248,11 +268,11 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return count;
     }
 
-    public void removeTaskMonday(long id){
+    public void removeTask(long id){
         String string =String.valueOf(id);
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("DELETE FROM MondayTask WHERE _id = '" + string + "'");
+        db.execSQL("DELETE FROM AllTasks WHERE _id = '" + string + "'");
     }
 
 

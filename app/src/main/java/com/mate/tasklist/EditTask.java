@@ -8,13 +8,16 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class EditTask extends AppCompatActivity {
 
-    EditText title,shortDescription,longDescription,priority;
+    EditText title,shortDescription,longDescription;
+    Spinner spinnerDay,spinnerPriority;
     Button saveChangesButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,11 +26,26 @@ public class EditTask extends AppCompatActivity {
 
         Intent intent = getIntent();
         final long id =intent.getLongExtra("ID",0);
-        System.out.println("Testing int "+id);
+
         title = (EditText)findViewById(R.id.edit1TaskTitle);
         shortDescription=(EditText)findViewById(R.id.edit1ShortDescription);
         longDescription=(EditText)findViewById(R.id.edit1LongDescription);
         saveChangesButton=(Button)findViewById(R.id.saveChangesBtn);
+
+        spinnerDay = (Spinner) findViewById(R.id.spinner_day);
+        spinnerPriority = (Spinner)findViewById(R.id.spinner_priority);
+
+        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this,
+                R.array.days_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,
+                R.array.priority_array, android.R.layout.simple_spinner_item);
+
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+        spinnerDay.setAdapter(adapter1);
+        spinnerPriority.setAdapter(adapter2);
 
         saveChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override

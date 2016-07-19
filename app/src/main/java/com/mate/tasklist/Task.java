@@ -14,10 +14,11 @@ abstract public class Task implements Parcelable {
     abstract String shortDescription();
     abstract String longDescription();
     abstract String priority();
+    abstract String day();
     abstract boolean isCompleted();
 
-    static Task create(String taskTitle, String shortDescription, String longDescription,String priority, boolean completed) {
-        return new AutoValue_Task(taskTitle, shortDescription, longDescription, priority, completed);
+    static Task create(String taskTitle, String shortDescription, String longDescription,String priority,String day, boolean completed) {
+        return new AutoValue_Task(taskTitle, shortDescription, longDescription, priority, day, completed);
     }
 
 }
