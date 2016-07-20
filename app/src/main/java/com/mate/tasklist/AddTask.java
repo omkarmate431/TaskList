@@ -1,9 +1,10 @@
 package com.mate.tasklist;
 
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.AppCompatActivity;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -14,7 +15,7 @@ import android.widget.Toast;
 public class AddTask extends AppCompatActivity {
 
     EditText taskTitle,taskShortDescription,taskLongDescription;
-    Spinner spinner;
+    Spinner spinnerDay,spinnerPriority;
     Button addTaskButton;
 
     @Override
@@ -29,66 +30,51 @@ public class AddTask extends AppCompatActivity {
         taskLongDescription = (EditText)findViewById(R.id.editLongDescription);
         addTaskButton = (Button)findViewById(R.id.addTaskBtn);
 
-        spinner = (Spinner) findViewById(R.id.spinner_day);
-// Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.days_array, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
+        spinnerDay = (Spinner) findViewById(R.id.spinner_day);
+        spinnerPriority = (Spinner)findViewById(R.id.spinner_priority);
 
-        spinner.setAdapter(adapter);
+        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this,
+                R.array.days_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,
+                R.array.priority_array, android.R.layout.simple_spinner_item);
+
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+        spinnerDay.setAdapter(adapter1);
+        spinnerPriority.setAdapter(adapter2);
 
         addTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String option = spinner.getSelectedItem().toString();
-                switch (option)
-                {
-                    case "Monday":
-                        if(taskDbHelper.addTaskMonday(taskTitle.getText().toString(),taskShortDescription.getText().toString(),taskLongDescription.getText().toString(),"High",false))
-                            {Toast.makeText(AddTask.this,"Task Added",Toast.LENGTH_SHORT).show();
+
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(AddTask.this).setTitle("Confirmation")
+                        .setMessage("Are you sure?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                if(taskDbHelper.addTask(taskTitle.getText().toString(),taskShortDescription.getText().toString()
+                                        ,taskLongDescription.getText().toString(),spinnerPriority.getSelectedItem().toString()
+                                        ,spinnerDay.getSelectedItem().toString(),false))
+                                {
+                                    Toast.makeText(AddTask.this,"Task Added",Toast.LENGTH_LONG).show();
+                                }
+                                else
+                                {
+                                    Toast.makeText(AddTask.this,"Task Not Added",Toast.LENGTH_LONG).show();
+                                }
+                                Intent intent = new Intent(AddTask.this,MainActivity.class);       //Task Added. Go to mainpage
+                                startActivity(intent);
                             }
-                        break;
-                    case "Tuesday":
-                        if(taskDbHelper.addTaskTuesday(taskTitle.getText().toString(),taskShortDescription.getText().toString(),taskLongDescription.getText().toString(),"High",false))
-                        {
-                            Toast.makeText(AddTask.this,"Task Added",Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    case "Wednesday":
-                        if(taskDbHelper.addTaskWednesday(taskTitle.getText().toString(),taskShortDescription.getText().toString(),taskLongDescription.getText().toString(),"High",false))
-                        {
-                            Toast.makeText(AddTask.this,"Task Added",Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    case "Thursday":
-                        if(taskDbHelper.addTaskThursday(taskTitle.getText().toString(),taskShortDescription.getText().toString(),taskLongDescription.getText().toString(),"High",false))
-                        {
-                            Toast.makeText(AddTask.this,"Task Added",Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    case "Friday":
-                        if(taskDbHelper.addTaskFriday(taskTitle.getText().toString(),taskShortDescription.getText().toString(),taskLongDescription.getText().toString(),"High",false))
-                    {
-                        Toast.makeText(AddTask.this,"Task Added",Toast.LENGTH_SHORT).show();
-                    }
-                        break;
-                    case "Saturday":
-                        if(taskDbHelper.addTaskSaturday(taskTitle.getText().toString(),taskShortDescription.getText().toString(),taskLongDescription.getText().toString(),"High",false))
-                    {
-                        Toast.makeText(AddTask.this,"Task Added",Toast.LENGTH_SHORT).show();
-                    }
-                        break;
-                    case "Sunday":
-                        if(taskDbHelper.addTaskSunday(taskTitle.getText().toString(),taskShortDescription.getText().toString(),taskLongDescription.getText().toString(),"High",false))
-                    {
-                        Toast.makeText(AddTask.this,"Task Added",Toast.LENGTH_SHORT).show();
-                    }
-                        break;
+                        }).setNegativeButton("No",null).setCancelable(false);
+                AlertDialog alert = alertDialog.create();
+                alert.show();
 
 
-                }
+
 
 
             }

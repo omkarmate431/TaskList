@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 public class TaskDetails extends AppCompatActivity {
 
-    TextView title,shortDescription,longDescription,priority,status;
+    TextView title,shortDescription,longDescription,day,priority,status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +16,7 @@ public class TaskDetails extends AppCompatActivity {
         title = (TextView)findViewById(R.id.taskDetailTitle);
         shortDescription = (TextView)findViewById(R.id.taskDetailShortDescription);
         longDescription = (TextView)findViewById(R.id.taskDetailLongDescription);
+        day = (TextView)findViewById(R.id.taskDetailDay);
         priority = (TextView)findViewById(R.id.taskDetailPriority);
         status = (TextView)findViewById(R.id.taskDetailStatus);
 
@@ -24,6 +25,7 @@ public class TaskDetails extends AppCompatActivity {
         title.setText(task.taskTitle());
         shortDescription.setText(task.shortDescription());
         longDescription.setText(task.longDescription());
+        day.setText(task.day());
         priority.setText(task.priority());
         if(task.isCompleted())
         {

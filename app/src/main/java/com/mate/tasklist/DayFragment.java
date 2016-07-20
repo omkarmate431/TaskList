@@ -58,36 +58,35 @@ public class DayFragment extends Fragment {
         switch (getDay())
         {
             case 0:
-                taskCursor = db.rawQuery("SELECT * FROM MondayTask", null);
+                taskCursor = db.rawQuery("SELECT * FROM AllTasks WHERE day= '"+"Monday"+"'", null);
                 break;
 
-
             case 1:
-                taskCursor = db.rawQuery("SELECT * FROM TuesdayTask", null);
+                taskCursor = db.rawQuery("SELECT * FROM AllTasks WHERE day= '"+"Tuesday"+"'", null);
                 break;
 
             case 2:
-                taskCursor = db.rawQuery("SELECT * FROM WednesdayTask", null);
+                taskCursor = db.rawQuery("SELECT * FROM AllTasks WHERE day= '"+"Wednesday"+"'", null);
                 break;
 
             case 3:
-                taskCursor = db.rawQuery("SELECT * FROM ThursdayTask", null);
+                taskCursor = db.rawQuery("SELECT * FROM AllTasks WHERE day= '"+"Thursday"+"'", null);
                 break;
 
             case 4:
-                taskCursor = db.rawQuery("SELECT * FROM FridayTask", null);
+                taskCursor = db.rawQuery("SELECT * FROM AllTasks WHERE day= '"+"Friday"+"'", null);
                 break;
 
             case 5:
-                taskCursor = db.rawQuery("SELECT * FROM SaturdayTask", null);
+                taskCursor = db.rawQuery("SELECT * FROM AllTasks WHERE day= '"+"Saturday"+"'", null);
                 break;
 
             case 6:
-                taskCursor = db.rawQuery("SELECT * FROM SundayTask", null);
+                taskCursor = db.rawQuery("SELECT * FROM AllTasks WHERE day= '"+"Sunday"+"'", null);
                 break;
 
             default:
-                taskCursor = db.rawQuery("SELECT * FROM MondayTask", null);
+                taskCursor = db.rawQuery("SELECT * FROM AllTasks WHERE day=Monday", null);
                 break;
 
         }
@@ -119,9 +118,10 @@ public class DayFragment extends Fragment {
         String short_description = cursor.getString(cursor.getColumnIndexOrThrow("short_description"));
         String long_description = cursor.getString(cursor.getColumnIndexOrThrow("long_description"));
         String priority = cursor.getString(cursor.getColumnIndexOrThrow("priority"));
+        String day = cursor.getString(cursor.getColumnIndexOrThrow("day"));
         boolean isCompleted = cursor.getInt(cursor.getColumnIndexOrThrow("isCompleted"))>0; //From StackOverflow
 
-        return Task.create(title, short_description, long_description, priority, isCompleted);
+        return Task.create(title, short_description, long_description, priority,day, isCompleted);
     }
 
 
@@ -160,7 +160,7 @@ public class DayFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 taskDbHelper = new TaskDbHelper(getActivity());
 
-                                taskDbHelper.removeTaskMonday(info.id);
+                                taskDbHelper.removeTask(info.id);
 
 
                                 Toast.makeText(getActivity(),"Task Deleted",Toast.LENGTH_LONG).show();
