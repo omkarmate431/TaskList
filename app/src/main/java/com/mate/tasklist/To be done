@@ -4,6 +4,6 @@
 4.Add Navigation Drawer with Categories(Home,Office etc)
 5 Merge all tables(Done)
 6 Replace sqlite by realm
-7 Add Task Accomplished function
+7 Add Task Accomplished function(Only accomplished done not unaccomplished)
 8 After any Task Deletion monday tab is viewed
 9 Update Task details page design

@@ -1,6 +1,7 @@
 package com.mate.tasklist;
 
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -166,12 +167,40 @@ public class DayFragment extends Fragment {
                                 Toast.makeText(getActivity(),"Task Deleted",Toast.LENGTH_LONG).show();
                                 Intent intent2 =new Intent(getActivity(),MainActivity.class);
                                 startActivity(intent2);
+
                             }
                         }).setNegativeButton("No",null).setCancelable(false);
                 AlertDialog alert = alertDialog.create();
                 alert.show();
 
                 return true;
+            case R.id.done:
+
+                AlertDialog.Builder alertDialog1 = new AlertDialog.Builder(getActivity()).setTitle("Confirmation")
+                        .setMessage("Mark Task as Done?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                taskDbHelper = new TaskDbHelper(getActivity());
+                                SQLiteDatabase db = taskDbHelper.getWritableDatabase();
+
+                                ContentValues contentValues = new ContentValues();
+
+                                contentValues.put("isCompleted", true);
+
+                                db.update("AllTasks",contentValues,"_id="+info.id,null);
+
+                                Toast.makeText(getActivity(),"Marked as done",Toast.LENGTH_LONG).show();
+                                Intent intent2 =new Intent(getActivity(),MainActivity.class);
+                                startActivity(intent2);
+                            }
+                        }).setNegativeButton("No",null).setCancelable(false);
+                AlertDialog alert1 = alertDialog1.create();
+                alert1.show();
+                return true;
+
             default:
                 return super.onContextItemSelected(item);
         }

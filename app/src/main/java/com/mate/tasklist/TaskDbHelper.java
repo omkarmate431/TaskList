@@ -82,5 +82,12 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM AllTasks WHERE _id = '" + string + "'");
     }
 
+    public void markDone(long id){
+        String string =String.valueOf(id);
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("UPDATE AllTasks SET isCompleted = "+true+" WHERE _id = '" + string + "'");
+    }
+
 
 }
