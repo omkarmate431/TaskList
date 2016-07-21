@@ -49,6 +49,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         }
     }
 
+<<<<<<< HEAD
 
 
     public boolean addTask(String title, String short_description, String long_description, String priority, String day,Boolean isCompleted)
@@ -66,6 +67,25 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return true;
     }
 
+=======
+
+
+    public boolean addTask(String title, String short_description, String long_description, String priority, String day,Boolean isCompleted)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("title", title);
+        contentValues.put("short_description", short_description);
+        contentValues.put("long_description", long_description);
+        contentValues.put("priority", priority);
+        contentValues.put("day",day);
+        contentValues.put("isCompleted", isCompleted);
+        db.insert("AllTasks", null, contentValues);
+        return true;
+    }
+
+>>>>>>> e66a1da6377c1ee2525e89c0a5493d8718bc6b4f
     public int getTaskCount()
     {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -76,6 +96,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
     }
 
     public void removeTask(long id){
+<<<<<<< HEAD
         String string =String.valueOf(id);
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -87,6 +108,12 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.execSQL("UPDATE AllTasks SET isCompleted = "+true+" WHERE _id = '" + string + "'");
+=======
+        String string =String.valueOf(id);
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("DELETE FROM AllTasks WHERE _id = '" + string + "'");
+>>>>>>> e66a1da6377c1ee2525e89c0a5493d8718bc6b4f
     }
 
 

@@ -76,6 +76,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:id="@+id/spinner_priority">
+<<<<<<< HEAD
+=======
+
+>>>>>>> e66a1da6377c1ee2525e89c0a5493d8718bc6b4f
         </Spinner>
     </LinearLayout>
     <Button
